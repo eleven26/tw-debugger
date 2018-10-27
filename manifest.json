@@ -1,0 +1,23 @@
+{
+  "name": "tw-debugger",
+  "version": "1.0",
+  "description": "重定向api请求到开发者服务器",
+  "browser_action": {
+    "default_popup": "popup.html"
+  },
+  "permissions": [
+    "webRequest",
+    "webRequestBlocking",
+    "storage",
+    "cookies",
+    "tabs",
+    "http://*/*",
+    "https://*/*"
+  ],
+  "background": {
+    "scripts": [
+      "background.js"
+    ]
+  },
+  "manifest_version": 2
+}
