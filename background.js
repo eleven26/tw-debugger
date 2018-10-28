@@ -53,9 +53,7 @@ function restoreTab(session)
             if (Number.isNaN(cookie.expirationDate) || cookie.expirationDate === undefined) {
                 cookie.expirationDate = (new Date().getTime() / 1000) + 3600 * 24 * 365;
             }
-            chrome.cookies.set(cookie, function (res) {
-                console.log(res)
-            });
+            chrome.cookies.set(cookie, function (res) { });
         });
     });
 }
