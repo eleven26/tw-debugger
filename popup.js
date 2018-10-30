@@ -6,8 +6,8 @@ let default_from_url = "http://test.api.86yqy.com";
 let default_cookie_domain = ".test.86yqy.com";
 let default_site_url = "86yqy.com";
 
-let default_store_session_url = default_to_url + "/store-session";
-let default_restore_session_url = default_to_url + "/restore-session";
+let default_store_session_url = "http://192.168.2.154:8001/store-session";
+let default_restore_session_url =  "http://192.168.2.154:8001/restore-session";
 
 window.onload = () => {
     // 默认值设置
