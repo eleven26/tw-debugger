@@ -6,14 +6,19 @@ let default_from_url = "http://test.api.86yqy.com";
 let default_cookie_domain = ".test.86yqy.com";
 let default_site_url = "86yqy.com";
 
+let default_store_session_url = default_to_url + "/store-session";
+let default_restore_session_url = default_to_url + "/restore-session";
+
 window.onload = () => {
     // 默认值设置
-    chrome.storage.local.get(['status', 'to_url', 'from_url', 'cookie_domain', 'site_url'], result => {
+    chrome.storage.local.get(['status', 'to_url', 'from_url', 'cookie_domain', 'site_url', 'last_session_id'], result => {
         document.getElementById('status').checked = result.status || false;
         document.getElementById('to_url').value = result.to_url || default_to_url;
         document.getElementById('from_url').value = result.from_url || default_from_url;
         cookie_domain = document.getElementById('cookie_domain').value = result.cookie_domain || default_cookie_domain;
         top_domain = document.getElementById('site_url').value = result.site_url || default_site_url;
+
+        document.getElementById('last_session_id').innerText = result.last_session_id || '(无)';
     });
 
     document.getElementById('status').addEventListener('click', ev => {
@@ -39,20 +44,22 @@ window.onload = () => {
 
     // 复制所有 storage、cookie
     document.getElementById('copy').addEventListener('click', () => {
-        generate_session().then(() => {
-            document.querySelector('#session').select();
-            if (document.execCommand('copy')) {
-                document.execCommand('copy');
-
-                success_tip();
-            }
+        generate_session().then(session => {
+            storeSession({session: JSON.stringify(session)});
         });
     });
 
     // 粘贴的时候直接根据粘贴板内容新建 tab 还原
     document.addEventListener('paste', function (evt) {
         let clipdata = evt.clipboardData || window.clipboardData;
-        chrome.extension.getBackgroundPage().restoreTab(clipdata.getData('text/plain'));
+
+        let data = clipdata.getData('text/plain');
+        if (data.length === 24) {
+            // 使用内网 mongodb 存储, 这是一个 mongo 记录 id
+            restoreSession(data);
+        } else {
+            chrome.extension.getBackgroundPage().restoreTab(data);
+        }
     });
 };
 
@@ -129,5 +136,55 @@ function generate_session() {
                 });
             })
         });
+    });
+}
+
+// 存储 session 到内网 mongodb
+function storeSession(session) {
+    xhr(default_store_session_url, session).then(responseText => {
+        // responseText => mongodb 记录 id
+        chrome.storage.local.set({id: responseText}, () => {
+            document.getElementById('last_session_id').innerText = responseText;
+
+            //
+            document.getElementById('copy_session_id').value = responseText;
+            document.querySelector('#copy_session_id').select();
+            if (document.execCommand('copy')) {
+                document.execCommand('copy');
+
+                success_tip();
+            }
+        })
+    });
+}
+
+// 根据 mongodb id 还原 session
+function restoreSession(mongodb_id) {
+    xhr(default_restore_session_url, {id: mongodb_id}).then(responseText => {
+        chrome.extension.getBackgroundPage().restoreTab(responseText)
+    })
+}
+
+// 发送 xhr 请求
+function xhr(url, params, method) {
+    return new Promise(resolve => {
+        let data = new FormData();
+
+        Object.keys(params).forEach(key => {
+            data.append(key, params[key]);
+        });
+
+        let xhr = new XMLHttpRequest();
+
+        xhr.addEventListener("readystatechange", function () {
+            if (this.readyState === 4) {
+                resolve(this.responseText);
+            }
+        });
+
+        method = method || "POST";
+        xhr.open(method, url);
+
+        xhr.send(data);
     });
 }

@@ -153,3 +153,15 @@ body {
 p {
     line-height: 25px;
 }
+
+#session_id {
+    font-weight: bold;
+}
+
+#session_id span {
+
+}
+
+#session_id span:hover {
+    cursor: pointer;
+}
