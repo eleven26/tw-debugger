@@ -11,7 +11,7 @@
     "storage",
     "cookies",
     "tabs",
-    "http://test.api.86yqy.com/*"
+    "http://shop.test.86yqy.com/*"
   ],
   "background": {
     "scripts": [
