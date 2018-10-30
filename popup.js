@@ -143,7 +143,7 @@ function generate_session() {
 function storeSession(session) {
     xhr(default_store_session_url, session).then(responseText => {
         // responseText => mongodb 记录 id
-        chrome.storage.local.set({id: responseText}, () => {
+        chrome.storage.local.set({last_session_id: responseText}, () => {
             document.getElementById('last_session_id').innerText = responseText;
 
             //
