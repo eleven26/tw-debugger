@@ -44,12 +44,14 @@ label {
     display: inline-block;
 }
 
-.url {
+.input {
     left: 0;
     padding: 4px 44px 4px 4px;
     height: 22px;
     line-height: 25px;
     font-size: 14px;
+    width: 200px;
+    margin-top: 5px;
 
     background-color: #fff;
     text-indent: 6px;
@@ -141,7 +143,7 @@ label {
 }
 
 body {
-    width: 300px;
+    width: 250px;
     -webkit-font-smoothing: antialiased;
     background-color: #fff;
     font: 12px/1.5 Microsoft YaHei, tahoma, arial, Hiragino Sans GB, \\5b8b\4f53, sans-serif;

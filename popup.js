@@ -1,22 +1,40 @@
+let cookie_domain;
+let top_domain;
 
-let cookie_domain = '.xx.com';
-let top_domain = 'yy.com';
+let default_to_url = "http://0.0.0.0:8001";
+let default_from_url = "http://test.api.86yqy.com";
+let default_cookie_domain = ".test.86yqy.com";
+let default_site_url = "86yqy.com";
 
 window.onload = () => {
-    chrome.storage.local.get(['status', 'redirect_url'], result => {
-        document.getElementById('switch').checked = result.status;
-        document.getElementById('url').value = result.redirect_url;
+    // 默认值设置
+    chrome.storage.local.get(['status', 'to_url', 'from_url', 'cookie_domain', 'site_url'], result => {
+        document.getElementById('status').checked = result.status || false;
+        document.getElementById('to_url').value = result.to_url || default_to_url;
+        document.getElementById('from_url').value = result.from_url || default_from_url;
+        cookie_domain = document.getElementById('cookie_domain').value = result.cookie_domain || default_cookie_domain;
+        top_domain = document.getElementById('site_url').value = result.site_url || default_site_url;
     });
 
-    document.getElementById('switch').addEventListener('click', ev => {
-        chrome.storage.local.set({status: ev.target.checked}, () => {});
+    document.getElementById('status').addEventListener('click', ev => {
+        chrome.storage.local.set({status: ev.target.checked}, () => {
+            chrome.extension.getBackgroundPage().reloadConfig();
+        });
     });
 
-    document.getElementById('url').addEventListener('keyup', ev => {
-        chrome.storage.local.set({redirect_url: ev.target.value}, () => {});
-    });
-    document.getElementById('url').addEventListener('click', ev => {
-        ev.target.select()
+    [].forEach.call(document.getElementsByClassName('input'), el => {
+        el.addEventListener('click', ev => {
+            ev.target.select();
+        });
+
+        el.addEventListener('keyup', ev => {
+            let props = {};
+            props[ev.target.name] = ev.target.value;
+
+            chrome.storage.local.set(props, () => {
+                chrome.extension.getBackgroundPage().reloadConfig();
+            });
+        })
     });
 
     // 复制所有 storage、cookie
@@ -60,7 +78,7 @@ function error_tip() {
  */
 function generate_session() {
     return new Promise(resolve => {
-        chrome.tabs.query({ 'active': true, 'windowId': chrome.windows.WINDOW_ID_CURRENT }, tabs => {
+        chrome.tabs.query({'active': true, 'windowId': chrome.windows.WINDOW_ID_CURRENT}, tabs => {
             let url = tabs[0].url;
             // 域名判断
             if (url.indexOf(top_domain) === -1) {
@@ -79,8 +97,8 @@ function generate_session() {
 
             // 获取当前 tab 的所有 cookie
             let cookiesPromise = new Promise(resolve => {
-                chrome.cookies.getAll({ domain: cookie_domain }, cookies => {
-                    cookies.map( cookie => {
+                chrome.cookies.getAll({domain: cookie_domain}, cookies => {
+                    cookies.map(cookie => {
                         return {
                             name: cookie.name,
                             value: cookie.value,

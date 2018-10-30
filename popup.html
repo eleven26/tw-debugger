@@ -8,10 +8,17 @@
 
 <body>
     <div class="container">
-        <p>是否重定向API：<input type="checkbox" id="switch" /><label for="switch">anything</label>
-        <p>重定向地址：<input class="url" id="url" type="text" value="http://0.0.0.0:8001" />
+        <p>是否重定向API：<input type="checkbox" id="status" name="status" /><label for="status">anything</label>
+        <p>重定向地址：<input class="input" id="to_url" name="to_url" type="text" />
         <p><textarea id="session"></textarea>
         <p id="copy-p"><button id="copy">复制session</button> <span id="success-tip">&#10003;</span> <span id="error-tip">x</span>
+
+        <div class="advance-settings">
+            <p>高级设置: </p>
+            <p>需要重定向的地址：<input class="input" id="from_url" name="from_url" type="text" />
+            <p>cookie 域名：<input class="input" id="cookie_domain" name="cookie_domain" type="text" />
+            <p>网站域名：<input class="input" id="site_url" type="text" name="site_url" />
+        </div>
     </div>
 </body>
 
