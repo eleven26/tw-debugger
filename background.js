@@ -6,23 +6,13 @@ let default_from_url = "http://test.api.86yqy.com";
 
 reloadConfig();
 
-chrome.webRequest.onBeforeRequest.addListener(
-    function(details) {
-        if (status === true && to_url) {
-            return {
-                redirectUrl: details.url.replace(from_url, to_url)
-            }
+function beforeRequest(details) {
+    if (status === true && to_url) {
+        return {
+            redirectUrl: details.url.replace(from_url, to_url)
         }
-    },
-    {
-        urls: [
-            from_url + "/*"
-        ],
-    },
-    [
-        "blocking"
-    ]
-);
+    }
+}
 
 /**
  * 在扩展弹出页面修改了配置之后重新设置 status、to_url
@@ -34,6 +24,25 @@ function reloadConfig() {
         status = result.status || false;
         to_url = result.to_url || default_to_url;
         from_url = result.from_url || default_from_url;
+
+        try {
+            new URL(from_url); // 不是正确的 url 会抛出错误
+
+            chrome.webRequest.onBeforeRequest.removeListener(beforeRequest);
+            chrome.webRequest.onBeforeRequest.addListener(
+                beforeRequest,
+                {
+                    urls: [
+                        from_url + "/*"
+                    ],
+                },
+                [
+                    "blocking"
+                ]
+            );
+        } catch (e) {
+            // 用户输入了错误的url, 先不处理
+        }
     });
 }
 
