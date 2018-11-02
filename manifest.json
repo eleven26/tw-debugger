@@ -12,6 +12,7 @@
     "cookies",
     "tabs",
     "http://shop.test.86yqy.com/*",
+    "http://test.api.86yqy.com/*",
     "http://test.86yqy.com/*"
   ],
   "background": {
