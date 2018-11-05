@@ -56,13 +56,16 @@ function restoreTab(session)
         active: true
     }, tab => {
         // 设置 storage
-        Object.keys(session.storage).forEach(key => {
-            chrome.tabs.executeScript(tab.id, {
-                code: `localStorage.setItem("${key}", '${session.storage[key]}')`
+        let set_storage_promise = new Promise(resolve => {
+            Object.keys(session.storage).forEach(key => {
+                chrome.tabs.executeScript(tab.id, {
+                    code: `localStorage.setItem("${key}", '${session.storage[key]}')`
+                }, () => resolve());
             });
         });
 
         // 设置 cookie
+        let set_cookie_promises = [];
         Object.keys(session.cookies).forEach(key => {
             let c = session.cookies[key];
             let cookie = {
@@ -77,7 +80,16 @@ function restoreTab(session)
             if (Number.isNaN(cookie.expirationDate) || cookie.expirationDate === undefined) {
                 cookie.expirationDate = (new Date().getTime() / 1000) + 3600 * 24 * 365;
             }
-            chrome.cookies.set(cookie, function (res) { });
+
+            set_cookie_promises.push(new Promise(resolve => {
+                chrome.cookies.set(cookie, () => resolve());
+            }));
+        });
+
+        Promise.all(set_cookie_promises.concat(set_storage_promise)).then(() => {
+            chrome.tabs.executeScript(tab.id, {
+                code: `window.location.reload()`
+            }, () => {});
         });
     });
 }
