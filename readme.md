@@ -7,3 +7,6 @@
 ### 使用:
 * 开发人员使用: 点击开启重定向之后，填写本机地址，这时候再次打开对应的网站，自定义的请求地址会被替换成填写的地址
 * 测试、前端使用: 在发现某个页面的 api 请求有误的时候，可点击 "复制session" 按钮，把当前页面状态复制下来，粘贴给后端；后端拿到之后点击扩展按钮，在弹出窗口按下粘贴快捷键就可以重现该次请求。
+
+### 重定向 api 请求到本地
+* `/Applications/Chromium.app/Contents/MacOS/Chromium --disable-web-security --user-data-dir --disable-extensions-http-throttling`
