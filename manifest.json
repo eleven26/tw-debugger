@@ -11,7 +11,7 @@
     "storage",
     "cookies",
     "tabs",
-    "http://*/*"
+    "http://*.86yqy.com/*"
   ],
   "background": {
     "scripts": [
