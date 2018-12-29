@@ -14,6 +14,26 @@ function beforeRequest(details) {
     }
 }
 
+// 请求头修改
+chrome.webRequest.onBeforeSendHeaders.addListener(
+    function (details) {
+        for (var i = 0; i < details.requestHeaders.length; ++i) {
+            if (details.requestHeaders[i].name === 'Accept') {
+                details.requestHeaders[i].value = 'application/prs.gbcloud.v103+json'
+                break;
+            }
+        }
+        return { requestHeaders: details.requestHeaders };
+    },
+    {
+        urls: [
+            "http://test.api.86yqy.com/*",
+            "http://0.0.0.0:8001/*"
+        ]
+    },
+    ["blocking", "requestHeaders"]
+);
+
 /**
  * 在扩展弹出页面修改了配置之后重新设置 status、to_url
  * background.js 除非 reload 扩展, 否则不会重新运行,
@@ -46,8 +66,7 @@ function reloadConfig() {
     });
 }
 
-function restoreTab(session)
-{
+function restoreTab(session) {
     session = JSON.parse(session);
     let url = new URL(session.url);
 
@@ -89,7 +108,7 @@ function restoreTab(session)
         Promise.all(set_cookie_promises.concat(set_storage_promise)).then(() => {
             chrome.tabs.executeScript(tab.id, {
                 code: `window.location.reload()`
-            }, () => {});
+            }, () => { });
         });
     });
 }
