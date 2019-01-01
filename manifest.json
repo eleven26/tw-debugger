@@ -1,5 +1,5 @@
 {
-  "name": "tw-debugger",
+  "name": "tw-debugger-test",
   "version": "2.0.0",
   "description": "重定向api请求到开发者服务器",
   "browser_action": {
@@ -11,7 +11,7 @@
     "storage",
     "cookies",
     "tabs",
-    "http://*.86yqy.com/*"
+    "https://*.github.com/*"
   ],
   "background": {
     "scripts": [

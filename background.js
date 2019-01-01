@@ -2,7 +2,7 @@
 let status, to_url, from_url;
 
 let default_to_url = "http://0.0.0.0:8001";
-let default_from_url = "http://test.api.86yqy.com";
+let default_from_url = "http://xx.com";
 
 reloadConfig();
 
@@ -13,26 +13,6 @@ function beforeRequest(details) {
         }
     }
 }
-
-// 请求头修改
-chrome.webRequest.onBeforeSendHeaders.addListener(
-    function (details) {
-        for (var i = 0; i < details.requestHeaders.length; ++i) {
-            if (details.requestHeaders[i].name === 'Accept') {
-                details.requestHeaders[i].value = 'application/prs.gbcloud.v103+json'
-                break;
-            }
-        }
-        return { requestHeaders: details.requestHeaders };
-    },
-    {
-        urls: [
-            "http://test.api.86yqy.com/*",
-            "http://0.0.0.0:8001/*"
-        ]
-    },
-    ["blocking", "requestHeaders"]
-);
 
 /**
  * 在扩展弹出页面修改了配置之后重新设置 status、to_url
@@ -63,52 +43,5 @@ function reloadConfig() {
         } catch (e) {
             // 用户输入了错误的url, 先不处理
         }
-    });
-}
-
-function restoreTab(session) {
-    session = JSON.parse(session);
-    let url = new URL(session.url);
-
-    chrome.tabs.create({
-        url: session.url,
-        active: true
-    }, tab => {
-        // 设置 storage
-        let set_storage_promise = new Promise(resolve => {
-            Object.keys(session.storage).forEach(key => {
-                chrome.tabs.executeScript(tab.id, {
-                    code: `localStorage.setItem("${key}", '${session.storage[key]}')`
-                }, () => resolve());
-            });
-        });
-
-        // 设置 cookie
-        let set_cookie_promises = [];
-        Object.keys(session.cookies).forEach(key => {
-            let c = session.cookies[key];
-            let cookie = {
-                url: url.origin,
-                name: c.name,
-                value: c.value,
-                path: c.path,
-                secure: c.secure,
-                httpOnly: c.httpOnly,
-                expirationDate: c.expirationDate,
-            };
-            if (Number.isNaN(cookie.expirationDate) || cookie.expirationDate === undefined) {
-                cookie.expirationDate = (new Date().getTime() / 1000) + 3600 * 24 * 365;
-            }
-
-            set_cookie_promises.push(new Promise(resolve => {
-                chrome.cookies.set(cookie, () => resolve());
-            }));
-        });
-
-        Promise.all(set_cookie_promises.concat(set_storage_promise)).then(() => {
-            chrome.tabs.executeScript(tab.id, {
-                code: `window.location.reload()`
-            }, () => { });
-        });
     });
 }
