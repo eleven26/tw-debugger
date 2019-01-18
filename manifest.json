@@ -1,6 +1,6 @@
 {
   "name": "tw-debugger",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "重定向api请求到开发者服务器",
   "browser_action": {
     "default_popup": "popup.html"
@@ -13,6 +13,15 @@
     "tabs",
     "http://*.86yqy.com/*"
   ],
+  "commands": {
+    "open-cart": {
+      "suggested_key": {
+        "windows": "Alt+C",
+        "mac": "Alt+C"
+      },
+      "description": "Open shopping cart in new page."
+    }
+  },
   "background": {
     "scripts": [
       "background.js"

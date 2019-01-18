@@ -18,10 +18,10 @@ function beforeRequest(details) {
 chrome.webRequest.onBeforeSendHeaders.addListener(
     function (details) {
         for (var i = 0; i < details.requestHeaders.length; ++i) {
-            if (details.requestHeaders[i].name === 'Accept') {
-                details.requestHeaders[i].value = 'application/prs.gbcloud.v103+json'
-                break;
-            }
+            // if (details.requestHeaders[i].name === 'Accept') {
+            //     details.requestHeaders[i].value = 'application/prs.gbcloud.v103+json'
+            //     break;
+            // }
         }
         return { requestHeaders: details.requestHeaders };
     },
@@ -112,3 +112,17 @@ function restoreTab(session) {
         });
     });
 }
+
+// 快捷键监听
+chrome.commands.onCommand.addListener(function(command) {
+    if (command == 'open-cart') {
+        chrome.tabs.query({
+            active: true,
+            lastFocusedWindow: true
+        }, function(tabs) {
+            var tab = tabs[0];
+            window.open((new URL(tab.url)).origin + '/cart', '_blank');
+        });
+    }
+  });
+  
