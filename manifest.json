@@ -1,6 +1,6 @@
 {
   "name": "tw-debugger",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "重定向api请求到开发者服务器",
   "browser_action": {
     "default_popup": "popup.html"
@@ -20,6 +20,13 @@
         "mac": "Alt+C"
       },
       "description": "Open shopping cart in new page."
+    },
+    "open-develop-page": {
+      "suggested_key": {
+        "windows": "Alt+D",
+        "mac": "Alt+D"
+      },
+      "description": "Open developer page."
     }
   },
   "background": {

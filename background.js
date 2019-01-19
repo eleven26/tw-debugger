@@ -124,5 +124,14 @@ chrome.commands.onCommand.addListener(function(command) {
             window.open((new URL(tab.url)).origin + '/cart', '_blank');
         });
     }
+    if (command == 'open-develop-page') {
+        chrome.tabs.query({
+            active: true,
+            lastFocusedWindow: true
+        }, function(tabs) {
+            var tab = tabs[0];
+            window.open('http://192.168.2.154/develop', '_blank');
+        });
+    }
   });
   
