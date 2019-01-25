@@ -23,9 +23,7 @@ window.onload = () => {
     });
 
     document.getElementById('status').addEventListener('click', ev => {
-        chrome.storage.local.set({status: ev.target.checked}, () => {
-            chrome.extension.getBackgroundPage().reloadConfig();
-        });
+        update_config({status: ev.target.checked})
     });
 
     // 复制所有 storage、cookie
@@ -50,11 +48,16 @@ window.onload = () => {
 
     // 根据下拉选择的地址更新 local 缓存
     document.getElementById('select_api').addEventListener('change', evt => {
-        chrome.storage.local.set({from_url: evt.target.value}, () => {
-            chrome.extension.getBackgroundPage().reloadConfig();
-        });
+        update_config({from_url: evt.target.value})
     });
 };
+
+function update_config($config)
+{
+    chrome.storage.local.set($config, () => {
+        chrome.extension.getBackgroundPage().reloadConfig();
+    });
+}
 
 function success_tip() {
     document.getElementById('success-tip').style.display = 'inline';
