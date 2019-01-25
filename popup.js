@@ -61,6 +61,13 @@ window.onload = () => {
             chrome.extension.getBackgroundPage().restoreTab(data);
         }
     });
+
+    // 根据下拉选择的地址更新 local 缓存
+    document.getElementById('select_api').addEventListener('change', evt => {
+        chrome.storage.local.set({from_url: evt.target.value}, () => {
+            chrome.extension.getBackgroundPage().reloadConfig();
+        });
+    });
 };
 
 
