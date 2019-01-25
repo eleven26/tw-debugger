@@ -114,12 +114,12 @@ function restoreTab(session) {
 }
 
 // 快捷键监听
-chrome.commands.onCommand.addListener(function(command) {
+chrome.commands.onCommand.addListener(function (command) {
     if (command == 'open-cart') {
         chrome.tabs.query({
             active: true,
             lastFocusedWindow: true
-        }, function(tabs) {
+        }, function (tabs) {
             var tab = tabs[0];
             window.open((new URL(tab.url)).origin + '/cart', '_blank');
         });
@@ -128,10 +128,9 @@ chrome.commands.onCommand.addListener(function(command) {
         chrome.tabs.query({
             active: true,
             lastFocusedWindow: true
-        }, function(tabs) {
+        }, function (tabs) {
             var tab = tabs[0];
             window.open('http://192.168.2.154/develop', '_blank');
         });
     }
-  });
-  
+});

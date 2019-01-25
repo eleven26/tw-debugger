@@ -6,6 +6,7 @@
     "default_popup": "popup.html"
   },
   "permissions": [
+    "contextMenus",
     "webRequest",
     "webRequestBlocking",
     "storage",
@@ -31,7 +32,8 @@
   },
   "background": {
     "scripts": [
-      "background.js"
+      "background.js",
+      "create_menus.js"
     ]
   },
   "manifest_version": 2
