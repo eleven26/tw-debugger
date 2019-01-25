@@ -14,6 +14,11 @@
     "tabs",
     "http://*.86yqy.com/*"
   ],
+  "icons": {
+    "16": "logos/16x16.png",
+    "48": "logos/48x48.png",
+    "128": "logos/128x128.png"
+  },
   "commands": {
     "open-cart": {
       "suggested_key": {
