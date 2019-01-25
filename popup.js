@@ -14,7 +14,8 @@ window.onload = () => {
     chrome.storage.local.get(['status', 'to_url', 'from_url', 'cookie_domain', 'site_url', 'last_session_id'], result => {
         document.getElementById('status').checked = result.status || false;
         document.getElementById('to_url').value = result.to_url || default_to_url;
-        document.getElementById('from_url').value = result.from_url || default_from_url;
+        // 默认选中下拉项
+        document.getElementById(id).value = result.from_url || default_from_url;
         cookie_domain = document.getElementById('cookie_domain').value = result.cookie_domain || default_cookie_domain;
         top_domain = document.getElementById('site_url').value = result.site_url || default_site_url;
 
@@ -25,21 +26,6 @@ window.onload = () => {
         chrome.storage.local.set({status: ev.target.checked}, () => {
             chrome.extension.getBackgroundPage().reloadConfig();
         });
-    });
-
-    [].forEach.call(document.getElementsByClassName('input'), el => {
-        el.addEventListener('click', ev => {
-            ev.target.select();
-        });
-
-        el.addEventListener('keyup', ev => {
-            let props = {};
-            props[ev.target.name] = ev.target.value;
-
-            chrome.storage.local.set(props, () => {
-                chrome.extension.getBackgroundPage().reloadConfig();
-            });
-        })
     });
 
     // 复制所有 storage、cookie
@@ -69,7 +55,6 @@ window.onload = () => {
         });
     });
 };
-
 
 function success_tip() {
     document.getElementById('success-tip').style.display = 'inline';
