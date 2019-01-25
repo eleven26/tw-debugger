@@ -1,51 +1,124 @@
-// A generic onclick callback function.
-function genericOnClick(info, tab) {
-    console.log("item " + info.menuItemId + " was clicked");
-    console.log("info: " + JSON.stringify(info));
-    console.log("tab: " + JSON.stringify(tab));
+let allMenus = {}
+let currentInfo, currnetTab
+
+/**
+ * login script
+ * 
+ * @param {string} username 
+ * @param {string} password 
+ */
+function getLoginScript(username, password) {
+    let loginScript = `
+    obj = {}
+
+    document.querySelector('.header-top .left li i').addEventListener('click', evt => {
+        let user = {
+            username: '${username}',
+            password: '${password}'
+        };
+
+        let times = 0
+        let id = setInterval(() => {
+            if (times++ == 120) {
+                clearInterval(id)
+            }
+
+            let username = document.querySelector('input[placeholder="用户名/手机号码"]');
+            if (username) {
+                input(username, user.username)
+                let password = document.querySelector('input[placeholder="登录密码"]');
+                input(password, user.password)
+
+                let submit = document.querySelector('.remember button');
+                submit.click();
+            }
+        }, 1000)
+    })
+
+    // 退出按钮
+    logout = document.querySelector('.header-top .left li:last-child')
+    if (JSON.parse(localStorage.getItem('userLoginState')) === true) {
+        obj['refreshed'] = true
+        logout.click()
+    } else {
+        obj['refreshed'] = false
+        // 登录弹窗
+        document.querySelector('.header-top .left li i').click()
+    }
+
+    function input(el, value) {
+        el.value = value
+        el.dispatchEvent(new Event('input'))
+        el.dispatchEvent(new Event('change'))
+        el.dispatchEvent(new Event('blur'))
+    }
+
+    obj
+    `
+
+    return loginScript
 }
 
-let subMenus = [
-    {
-        'env': 'test',
-        'users': [
-            {
-                username: 'blyy123',
-            }
-        ]
-    }
+function chooseMenu(info, tab) {
+    currentInfo = info
+    currnetTab = tab
+
+    let menu = allMenus[info.menuItemId]
+    let username = menu.user.username
+    let password = menu.user.password || '123456'
+
+    let loginScript = getLoginScript(username, password)
+    chrome.tabs.executeScript(tab.id, {
+        code: loginScript
+    }, items => {
+        // 页面刷新过
+        if (items[0].refreshed) {
+            chrome.tabs.onUpdated.addListener(function (tabId, info) {
+                if (tabId === tab.id && info.status === 'complete') {
+                    chrome.tabs.executeScript(tab.id, {
+                        code: loginScript
+                    }, items => {
+                        // 重新加载 background page
+                        window.location.reload()
+                    }); 
+                }
+            });
+        }
+    });
+}
+
+let users = [
+    { username: 'dtyy123', company_name: '耀企体验平台' },
+    { username: 'txtyy123', company_name: '同兴泰' },
+    { username: 'blyy123', company_name: '宝灵医药' },
+    { username: 'tjyy123', company_name: '天健' },
+    { username: 'hzyy123', company_name: '宏州' },
+    { username: 'zxyy123', company_name: '展兴' },
+    { username: 'zxceshi', company_name: '展兴' },
+    { username: 'zxceshi011', company_name: '展兴' },
 ]
 
-function createMenus(subMenus) {
-    // Create one test item for each context type.
+function createMenus() {
     let contexts = ["page", "selection", "link", "editable", "image"];
-    for (var i = 0; i < contexts.length; i++) {
-        let context = contexts[i];
-        let id = chrome.contextMenus.create({
-            "title": "login",
-            "contexts": [context]
-        });
+    let id = chrome.contextMenus.create({
+        "title": "登录商城",
+        "contexts": contexts
+    });
 
-        subMenus.forEach(menu => {
-            let menuId = chrome.contextMenus.create({
-                "title": menu.env,
-                "contexts": [context],
-                parentId: id
-            })
-
-            menu.users.forEach(user => {
-                let password = user.password || '123456'
-                let subMenuId = chrome.contextMenus.create({
-                    "title": `${user.username} / ${password}`,
-                    "contexts": [context],
-                    "onclick": genericOnClick,
-                    parentId: menuId
-                })
-            });
-        });
-    }
+    users.forEach(user => {
+        let childId = chrome.contextMenus.create({
+            "title": `${user.username} (${user.company_name})`,
+            "contexts": contexts,
+            "onclick": chooseMenu,
+            "parentId": id
+        }, () => {
+            allMenus[childId] = {
+                user
+            }
+        })
+    });
 }
 
 chrome.contextMenus.removeAll()
-createMenus(subMenus)
+createMenus()
 
