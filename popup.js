@@ -15,7 +15,7 @@ window.onload = () => {
         document.getElementById('status').checked = result.status || false;
         document.getElementById('to_url').value = result.to_url || default_to_url;
         // 默认选中下拉项
-        document.getElementById(id).value = result.from_url || default_from_url;
+        document.getElementById('select_api').value = result.from_url || default_from_url;
         cookie_domain = document.getElementById('cookie_domain').value = result.cookie_domain || default_cookie_domain;
         top_domain = document.getElementById('site_url').value = result.site_url || default_site_url;
 
