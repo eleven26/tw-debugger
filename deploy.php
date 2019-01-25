@@ -19,7 +19,6 @@ if ($zip->open($filename, ZipArchive::CREATE) !== true) {
 
 $files = [
     'background.js',
-    'create_menus.js',
     'manifest.json',
     'popup.css',
     'popup.html',
