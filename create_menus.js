@@ -44,6 +44,8 @@ function getLoginScript(username, password) {
     
                     let submit = document.querySelector('.login-submit span')
                     submit.click();
+
+                    clearInterval(id)
                 }
             }, 1000)
         }
@@ -69,6 +71,8 @@ function getLoginScript(username, password) {
     
                     let submit = document.querySelector('.remember button');
                     submit.click();
+
+                    clearInterval(id)
                 }
             }, 1000)
         })
