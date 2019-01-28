@@ -33,6 +33,21 @@ window.onload = () => {
         });
     });
 
+    [].forEach.call(document.getElementsByClassName('input-old'), el => {
+        el.addEventListener('click', ev => {
+            ev.target.select();
+        });
+
+        el.addEventListener('keyup', ev => {
+            let props = {};
+            props[ev.target.name] = ev.target.value;
+
+            chrome.storage.local.set(props, () => {
+                chrome.extension.getBackgroundPage().reloadConfig();
+            });
+        })
+    });
+
     // 粘贴的时候直接根据粘贴板内容新建 tab 还原
     document.addEventListener('paste', function (evt) {
         let clipdata = evt.clipboardData || window.clipboardData;
