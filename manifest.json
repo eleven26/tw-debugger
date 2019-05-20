@@ -1,6 +1,6 @@
 {
   "name": "tw-debugger",
-  "version": "2.0.5.3",
+  "version": "2.0.6.0",
   "description": "重定向api请求到开发者服务器",
   "browser_action": {
     "default_popup": "popup.html"
