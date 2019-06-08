@@ -47,3 +47,7 @@
         - 在 `需要重定向的地址` 的下拉列表选择需要重定向的接口地址（对应不同的测试环境）
     - 查看接口信息
         - 点击 `Api Blame`
+
+### 截图
+
+![popup](https://github.com/eleven26/tw-debugger/blob/master/screenshots/popup.png)
