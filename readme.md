@@ -30,11 +30,12 @@
 
 ### 安装
 
-* 从 Chrome 商店安装
+* 从 Chrome 商店安装（推荐）
     - 搜索 `tw debugger`，点击 "添加到 Chrome"
 * 从 github 下载
     - 下载地址 [https://github.com/eleven26/tw-debugger/releases/latest](https://github.com/eleven26/tw-debugger/releases/latest)
-    - 下载 `*.crx` 文件，打开 Chrome/Chromium 插件管理页面，把下载的文件拖进去即可使用
+    - 下载 `tw-debugger-*.crx` 文件，打开 Chrome/Chromium 插件管理页面，把下载的文件拖进去即可使用
+    - 如果上述方式都不行，下载 `tw-debugger-*.zip` 文件，然后解压，在扩展管理页面开启开发者模式，然后点击 `Load Unpacked` 按钮，选择解压后的文件夹即可
 
 ### 使用
  
