@@ -147,7 +147,8 @@ body {
     -webkit-font-smoothing: antialiased;
     background-color: #fff;
     font: 12px/1.5 Microsoft YaHei, tahoma, arial, Hiragino Sans GB, \\5b8b\4f53, sans-serif;
-    color: #666;
+    color: #24292e;
+    font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol;
 }
 
 p {

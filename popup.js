@@ -2,7 +2,7 @@ let cookie_domain;
 let top_domain;
 
 let default_to_url = "http://0.0.0.0:8001";
-let default_from_url = "http://test.api.86yqy.com";
+let default_from_url = "http://qa1.api.86yqy.com";
 let default_cookie_domain = ".test.86yqy.com";
 let default_site_url = "86yqy.com";
 
