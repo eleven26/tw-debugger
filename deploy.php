@@ -3,8 +3,13 @@
 
 $zip = new ZipArchive();
 
+$outputDir = __DIR__ . DIRECTORY_SEPARATOR . 'output';
+if (!is_dir($outputDir)) {
+    mkdir($outputDir, 0755, true);
+}
+
 // remove old archives.
-$directoryIterator = new DirectoryIterator(__DIR__ . DIRECTORY_SEPARATOR . 'output');
+$directoryIterator = new DirectoryIterator($outputDir);
 foreach($directoryIterator as $f) {
     if ($f->isFile()) {
         unlink($f->getPathname());
